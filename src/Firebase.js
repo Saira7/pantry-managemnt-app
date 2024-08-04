@@ -3,7 +3,7 @@ import { getFirestore, initializeFirestore, persistentLocalCache } from 'firebas
 import { getAnalytics, isSupported } from "firebase/analytics";
 import { getAuth, GoogleAuthProvider } from 'firebase/auth';
 
-// Use environment variables for sensitive information
+// Firebase configuration from environment variables
 const firebaseConfig = {
   apiKey: process.env.NEXT_PUBLIC_API_KEY,
   authDomain: process.env.NEXT_PUBLIC_AUTH_DOMAIN,
@@ -14,22 +14,24 @@ const firebaseConfig = {
   measurementId: process.env.NEXT_PUBLIC_MEASUREMENT_ID
 };
 
+// Initialize Firebase
 const app = initializeApp(firebaseConfig);
 const firestore = initializeFirestore(app, {
-  localCache: persistentLocalCache()
+  localCache: persistentLocalCache() // Only use if needed
 });
 const auth = getAuth(app);
 
-
-
 let analytics;
-isSupported().then((supported) => {
-  if (supported) {
-    analytics = getAnalytics(app);
-  }
-}).catch(console.error);
+isSupported()
+  .then((supported) => {
+    if (supported) {
+      analytics = getAnalytics(app);
+    }
+  })
+  .catch((error) => {
+    console.error("Error initializing analytics:", error);
+  });
 
 const provider = new GoogleAuthProvider();
+
 export { firestore, analytics, auth, provider };
-
-
