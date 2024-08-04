@@ -1,7 +1,7 @@
 'use client'
 import axios from 'axios';
 import * as dotenv from 'dotenv';
-import { useState, useEffect } from 'react';
+import { useCallback, useState, useEffect } from 'react';
 import { Box, Stack, Typography, Button, Modal, TextField, IconButton } from '@mui/material';
 import { firestore, auth } from '@/Firebase';
 import { collection, doc, getDocs, query, setDoc, deleteDoc, getDoc } from 'firebase/firestore';
@@ -42,7 +42,7 @@ export default function Home() {
   const [recognizedItem, setRecognizedItem] = useState('');
   const [recipes, setRecipes] = useState('');
 
-  const updateInventory = async () => {
+  const updateInventory = useCallback(async () => {
     if (user) {
       const snapshot = query(collection(firestore, `users/${user.uid}/inventory`));
       const docs = await getDocs(snapshot);
@@ -52,11 +52,11 @@ export default function Home() {
       });
       setInventory(inventoryList);
     }
-  };
+  }, [user]);
 
   useEffect(() => {
     updateInventory();
-  }, [user]);
+  }, [user, updateInventory]);
 
   const addItem = async (item) => {
     if (!user) return;
@@ -184,9 +184,7 @@ export default function Home() {
     }
     handleClose();
   };
-  useEffect(() => {
-    updateInventory();
-  }, [updateInventory]);
+ 
   return (
     <Box
       width="100vw"
