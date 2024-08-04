@@ -184,7 +184,9 @@ export default function Home() {
     }
     handleClose();
   };
-
+  useEffect(() => {
+    updateInventory();
+  }, [updateInventory]);
   return (
     <Box
       width="100vw"

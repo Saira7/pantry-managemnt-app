@@ -1,5 +1,5 @@
 import { initializeApp } from "firebase/app";
-import { getFirestore, enableIndexedDbPersistence } from 'firebase/firestore';
+import { getFirestore, initializeFirestore, persistentLocalCache } from 'firebase/firestore';
 import { getAnalytics, isSupported } from "firebase/analytics";
 import { getAuth, GoogleAuthProvider } from 'firebase/auth';
 
@@ -15,17 +15,12 @@ const firebaseConfig = {
 };
 
 const app = initializeApp(firebaseConfig);
-const firestore = getFirestore(app);
+const firestore = initializeFirestore(app, {
+  localCache: persistentLocalCache()
+});
 const auth = getAuth(app);
 
-enableIndexedDbPersistence(firestore)
-  .catch((err) => {
-    if (err.code === 'failed-precondition') {
-      console.error("Failed to enable persistence: Multiple tabs open");
-    } else if (err.code === 'unimplemented') {
-      console.error("Failed to enable persistence: Browser does not support it");
-    }
-  });
+
 
 let analytics;
 isSupported().then((supported) => {
