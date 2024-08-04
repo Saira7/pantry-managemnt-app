@@ -1,6 +1,5 @@
 'use client'
 import axios from 'axios';
-import * as dotenv from 'dotenv';
 import { useCallback, useState, useEffect } from 'react';
 import { Box, Stack, Typography, Button, Modal, TextField, IconButton } from '@mui/material';
 import { firestore, auth } from '@/Firebase';
@@ -9,7 +8,6 @@ import { useAuthState } from 'react-firebase-hooks/auth';
 import { signInWithPopup, GoogleAuthProvider, signOut } from 'firebase/auth';
 import PhotoCamera from '@mui/icons-material/PhotoCamera';
 
-dotenv.config();
 
 const style = {
   position: 'absolute',
